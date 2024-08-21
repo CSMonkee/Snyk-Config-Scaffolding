@@ -45,64 +45,27 @@ def check_organization_exists(args, group_id):
     return None
 
 
-def get_snyk_service_account_token(args, org_id):
-
-    # Endpoint to list service accounts in the group
-    url = f'{SNYK_REST_API_BASE_URL}//orgs/{org_id}/service_accounts?version={args["api_ver"]}'
-    response = requests.request("GET", url, headers=build_headers(args))
-    #response = requests.get(f'{SNYK_REST_API_BASE_URL}/orgs/{org_id}/service_accounts', headers=build_headers(args))
-
-    if response.status_code == 200:
-        service_accounts = json.loads(response.text)['data']
-
-        # Find the service account by name
-        for account in service_accounts:
-            if account['attributes']['name'] == "CICD":
-                # Assuming the token is stored within the account details
-                return account.get('token', None)
-
-        # If the account is not found, return None
-        return None
-    else:
-        # Handle errors
-        print(f"Failed to retrieve service accounts: {response.status_code}, {response.text}")
-        return None
-
-
-
-def create_organization(org_name, group_id=None):
-    url = f'{SNYK_REST_API_BASE_URL}/orgs'
-
-    payload = {
-        'name': org_name,
+def create_service_account(args, org_id):
+    url = f'{SNYK_REST_API_BASE_URL}/org/{org_id}/service_accounts?version={args["api_ver"]}'
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': '{0}'.format(args["group_svc_ac_token"])
     }
-
-    if group_id:
-        payload['groupId'] = group_id
-
-    response = requests.post(url, headers=build_headers(), json=payload)
-
-    if response.status_code == 200:
-        org_data = response.json()
-        print(f"Organization '{org_name}' created successfully!")
-        return org_data["id"]
-    else:
-        print(f"Failed to create organization: {response.status_code} - {response.text}")
-        return None
-
-
-
-def create_service_account(args):
-    url = f'{SNYK_REST_API_BASE_URL}/org/{args["org_id"]}/service_accounts'
-
     payload = {
-        'name': "CICD",
-        'scopes': ['org.read', 'org.write', 'project.read', 'project.write'],  # Example scopes
+        "data": {
+            "attributes": {
+                "auth_type": "api_key",
+                "name": "{0}".format(args["service_account_name"]),
+                "role_id": "02f9c335-fed6-4af2-9f08-d1b56995f1c7"
+            },
+            "type": "service_account"
+        }
     }
+    payload = json.dumps(payload)
 
-    response = requests.post(url, headers=build_headers(args), json=payload)
+    response = requests.post(url, headers=headers, data=payload)
 
-    if response.status_code == 200:
+    if response.status_code == 201:
         service_account_data = response.json()
         print(f"Service account 'CICD' created successfully!")
         return service_account_data
