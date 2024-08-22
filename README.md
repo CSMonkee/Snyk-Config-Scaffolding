@@ -25,13 +25,13 @@ python3 Snyk-Config-Scaffolding/src/snyk-scaffold.py
     --org_name="<target-snyk-org-name>" 
     --group_svc_ac_token="<snyk-group-service-account-token-value>" 
     --org_service_account_name="<name>" 
-    --group_role_name="<name>>"
+    --group_role_name="<name>"
     --api_ver="<snyk-rest-api-version>"
 
 python3 Snyk-Config-Scaffolding/src/snyk-scaffold.py
     --group_name="kevin.matthews Group"
     --org_name="Kevin-Test2"
-    --group_svc_ac_token="<uath-token-value>"
+    --group_svc_ac_token="<snyk-group-service-account-token-value>"
     --org_service_account_name="CICD"
     --group_role_name="CICD"
     --api_ver="2024-08-15"
