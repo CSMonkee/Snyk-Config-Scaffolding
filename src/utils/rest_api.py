@@ -59,7 +59,7 @@ def create_service_account(args, org_id, role_id):
         "data": {
             "attributes": {
                 "auth_type": "api_key",
-                "name": "{0}".format(args["service_account_name"]),
+                "name": "{0}".format(args["org_service_account_name"]),
                 "role_id": "{0}".format(role_id)
             },
             "type": "service_account"
@@ -71,8 +71,8 @@ def create_service_account(args, org_id, role_id):
 
     if response.status_code == 201:
         service_account_data = response.json()
-        print('Service account {0} created successfully!'.format(args["service_account_name"]))
+        print('Service account {0} created successfully!'.format(args["org_service_account_name"]))
         return service_account_data["data"]["attributes"]["api_key"]
     else:
-        print(f"Failed to create service account {args['service_account_name']}: {response.status_code} - {response.text}")
+        print(f"Failed to create service account {args['org_service_account_name']}: {response.status_code} - {response.text}")
         return None
