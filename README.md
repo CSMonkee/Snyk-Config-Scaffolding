@@ -19,7 +19,7 @@ pipeline will be kept within a restricted environmental context.
 
 
 ## How to call Snyk-Config-Scaffolding
-
+````
 python3 Snyk-Config-Scaffolding/src/snyk-scaffold.py
     --group_name="<snyk-group-name>"
     --org_name="<target-snyk-org-name>" 
@@ -35,6 +35,7 @@ python3 Snyk-Config-Scaffolding/src/snyk-scaffold.py
     --org_service_account_name="CICD"
     --group_role_name="CICD"
     --api_ver="2024-08-15"
+````
 
 ### Note:
 At the time of writing, I am required to use a mix of GA and beta REST APIs. As the beta APIs become GA, so I will 
