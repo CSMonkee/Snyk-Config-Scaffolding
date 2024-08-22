@@ -8,6 +8,7 @@ def get_arguments():
     parser.add_argument('-g', '--group_name', required=True)
     parser.add_argument('-o', '--org_name', required=True)
     parser.add_argument('-a', '--group_svc_ac_token', required=True)
+    parser.add_argument('-r', '--group_role_name', required=True)
     parser.add_argument('-s', '--service_account_name', required=True)
     parser.add_argument('-v', '--api_ver', required=True)
 
@@ -18,16 +19,15 @@ def get_arguments():
 def scaffold_snyk_config(args):
     groupId = utils.rest_api.get_group_id(args)
     if groupId != None:
-        orgId = utils.rest_api.check_organization_exists(args, groupId)
-        if orgId == None:
-            #utils.v1_api.create_org()
-            orgId = utils.v1_api.create_organization(args, groupId)
-            if orgId != None:
-                #org_svc_ac_token = utils.rest_api.get_snyk_service_account_token(args, orgId)
-                #if org_svc_ac_token == None:
-                svc_ac = utils.rest_api.create_service_account(args, orgId)
+        org_id = utils.rest_api.check_organization_exists(args, groupId)
+        role_id = utils.v1_api.get_group_role(args, groupId, args["group_role_name"])
+        if org_id == None:
+            org_id = utils.v1_api.create_organization(args, groupId, role_id)
+            if org_id != None:
+                svc_ac = utils.rest_api.create_service_account(args, org_id)
         else:
-            svc_ac = utils.rest_api.create_service_account(args, orgId)
+            svc_ac_key = utils.rest_api.create_service_account(args, org_id, role_id)
+            return svc_ac_key
 
 
 
