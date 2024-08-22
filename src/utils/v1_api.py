@@ -16,9 +16,9 @@ def build_headers(args):
 
 # Create the target organisation into which the pipeline jobs will commit scan results, thus yielding targets and
 # projects
-def create_organization(args, groupId):
+def create_organization(args, group_id):
     url = f'{SNYK_V1_API_BASE_URL}/org'
-    payload = {'name': '{0}'.format(args["org_name"]), 'groupId': '{0}'.format(groupId)}
+    payload = {'name': '{0}'.format(args["org_name"]), 'groupId': '{0}'.format(group_id)}
     payload = json.dumps(payload)
     response = requests.post(url, headers=build_headers(args), data=payload)
 
@@ -32,12 +32,12 @@ def create_organization(args, groupId):
 
 
 # Find the id for the named group role that will apply to the service account created within the org
-def get_group_role_id(args, groupId, rolename):
-    url = f'{SNYK_V1_API_BASE_URL}/group/{groupId}/roles'
+def get_group_role_id(args, group_id, role_name):
+    url = f'{SNYK_V1_API_BASE_URL}/group/{group_id}/roles'
     response = requests.get(url, headers=build_headers(args))
 
     for role in json.loads(response.text):
-        if role["name"] == rolename:
+        if role["name"] == role_name:
             return role["publicId"]
-    print(f"Unable to find role {rolename} : {response.status_code} - {response.text}")
+    print(f"Unable to find role {role_name} : {response.status_code} - {response.text}")
     return None

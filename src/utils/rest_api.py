@@ -31,7 +31,6 @@ def check_organization_exists(args, group_id):
     response = requests.request("GET", url, headers=build_headers(args))
     if response.status_code == 200:
         orgs = json.loads(response.text)['data']
-        #orgs = response.json().get('orgs', [])
         for org in orgs:
             if org['attributes']['name'] == args["org_name"]:
                 return org['id']

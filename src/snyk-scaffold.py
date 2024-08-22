@@ -23,12 +23,12 @@ def get_arguments():
 def scaffold_snyk_config(args):
     svc_ac_key = None
     group_id = utils.rest_api.get_group_id(args)
-    if group_id != None:
+    if group_id is not None:
         org_id = utils.rest_api.check_organization_exists(args, group_id)
         role_id = utils.v1_api.get_group_role_id(args, group_id, args["group_role_name"])
-        if org_id == None:
+        if org_id is None:
             org_id = utils.v1_api.create_organization(args, group_id)
-            if org_id != None:
+            if org_id is not None:
                 svc_ac_key = utils.rest_api.create_service_account(args, org_id, role_id)
         else:
             svc_ac_key = utils.rest_api.create_service_account(args, org_id, role_id)
