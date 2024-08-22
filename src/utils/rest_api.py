@@ -7,7 +7,7 @@ SNYK_REST_API_BASE_URL="https://api.snyk.io/rest"
 def build_headers(args):
     headers = {
       'Content-Type': 'application/vnd.api+json',
-      'Authorization': '{0}'.format(args["group_svc_ac_token"])
+      'Authorization': 'token {0}'.format(args["group_svc_ac_token"])
     }
     return headers
 
@@ -47,27 +47,22 @@ def check_organization_exists(args, group_id):
 
 def create_service_account(args, org_id):
     url = f'{SNYK_REST_API_BASE_URL}/org/{org_id}/service_accounts?version={args["api_ver"]}'
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': '{0}'.format(args["group_svc_ac_token"])
-    }
     payload = {
         "data": {
             "attributes": {
                 "auth_type": "api_key",
                 "name": "{0}".format(args["service_account_name"]),
-                "role_id": "02f9c335-fed6-4af2-9f08-d1b56995f1c7"
+                "role_id": "{0}".format("02f9c335-fed6-4af2-9f08-d1b56995f1c7")
             },
             "type": "service_account"
         }
     }
-    payload = json.dumps(payload)
-
-    response = requests.post(url, headers=headers, data=payload)
+    #payload = json.dumps(payload)
+    response = requests.post(url, json=payload, headers=build_headers(args))
 
     if response.status_code == 201:
         service_account_data = response.json()
-        print(f"Service account 'CICD' created successfully!")
+        print('Organisation {0} created successfully!'.format(args["service_account_name"]))
         return service_account_data
     else:
         print(f"Failed to create service account: {response.status_code} - {response.text}")
