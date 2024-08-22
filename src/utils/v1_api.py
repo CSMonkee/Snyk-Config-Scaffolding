@@ -4,6 +4,8 @@ import requests
 
 SNYK_V1_API_BASE_URL="https://api.snyk.io/v1"
 
+
+# Build the http headers, authorised using the group service account token passed as a command line argument
 def build_headers(args):
     headers = {
       'Content-Type': 'application/json',
@@ -12,6 +14,8 @@ def build_headers(args):
     return headers
 
 
+# Create the target organisation into which the pipeline jobs will commit scan results, thus yielding targets and
+# projects
 def create_organization(args, groupId):
     url = f'{SNYK_V1_API_BASE_URL}/org'
     payload = {'name': '{0}'.format(args["org_name"]), 'groupId': '{0}'.format(groupId)}
@@ -27,8 +31,8 @@ def create_organization(args, groupId):
         return None
 
 
-
-def get_group_role(args, groupId, rolename):
+# Find the id for the named group role that will apply to the service account created within the org
+def get_group_role_id(args, groupId, rolename):
     url = f'{SNYK_V1_API_BASE_URL}/group/{groupId}/roles'
     response = requests.get(url, headers=build_headers(args))
 

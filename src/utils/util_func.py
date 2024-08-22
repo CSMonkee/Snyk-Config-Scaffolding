@@ -1,5 +1,7 @@
 import urllib.parse
 
+
+# Pagination
 def next_page(response):
     # response['links']['next']
     try:
