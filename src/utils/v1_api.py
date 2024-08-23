@@ -18,9 +18,18 @@ def build_headers(args):
 # projects
 def create_organization(args, group_id):
     url = f'{SNYK_V1_API_BASE_URL}/org'
-    payload = {'name': '{0}'.format(args["org_name"]), 'groupId': '{0}'.format(group_id)}
-    payload = json.dumps(payload)
-    response = requests.post(url, headers=build_headers(args), data=payload)
+    if args["template_org_id"] is None:
+        payload = {
+            'name': '{0}'.format(args["org_name"]),
+            'groupId': '{0}'.format(group_id)
+        }
+    else:
+        payload = {
+            'name': '{0}'.format(args["org_name"]),
+            'groupId': '{0}'.format(group_id),
+            'sourceOrgId': '{0}'.format(args["template_org_id"])
+        }
+    response = requests.post(url, headers=build_headers(args), json=payload)
 
     if response.status_code == 201:
         org = response.json()

@@ -13,4 +13,3 @@ def next_page(response):
     except:
         pagination = None
     return pagination
-

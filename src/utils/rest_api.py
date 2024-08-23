@@ -1,15 +1,24 @@
 import json
+import os
+
 import requests
 
-SNYK_REST_API_BASE_URL="https://api.snyk.io/rest"
+SNYK_REST_API_BASE_URL = "https://api.snyk.io/rest"
 
 
 # Build the http headers, authorised using the group service account token passed as a command line argument
 def build_headers(args):
-    headers = {
-        'Content-Type': 'application/vnd.api+json',
-        'Authorization': f'token {args["group_svc_ac_token"]}'
-    }
+    try:
+        headers = {
+            'Content-Type': 'application/vnd.api+json',
+            'Authorization': f'token {args["group_svc_ac_token"]}'
+        }
+    except KeyError:
+        headers = {
+            'Content-Type': 'application/vnd.api+json',
+            'Authorization': 'token {0}'.format(os.getenv('SNYK_TOKEN'))
+        }
+
     return headers
 
 
@@ -59,5 +68,6 @@ def create_service_account(args, org_id, role_id):
         print('Service account {0} created successfully!'.format(args["org_service_account_name"]))
         return service_account_data["data"]["attributes"]["api_key"]
     else:
-        print(f"Failed to create service account {args['org_service_account_name']}: {response.status_code} - {response.text}")
+        print(
+            f"Failed to create service account {args['org_service_account_name']}: {response.status_code} - {response.text}")
         return None

@@ -1,6 +1,6 @@
 ### THIS SOFTWARE IS WORK IN PROGRESS. DO NOT CONSIDER IT COMPLETE UNTIL THIS NOTICE IS REMOVED!
 
-# Snyk-Config-Scaffolding
+# Snyk-Scaffold
 The utility can be called within CICD pipelines. It enables Snyk customers to scaffold the following configuration 
 within the Snyk platform:
 
@@ -17,23 +17,49 @@ Customers are advised to build a facade service in front of snyk-scaffold, where
 CICD pipelines. This ensures the Snyk group auth key that is required in order to scaffold Snyk configuration for the 
 pipeline will be kept within a restricted environmental context. 
 
+The script returns the service account token for the **newly** created organisation. This value may be propagated to 
+the environment as follows:
 
-## How to call Snyk-Config-Scaffolding
+    ```
+    export SNYK_TOKEN=token-value
+    ```
+
+
+## How to call Snyk-Scaffold
 ````
 python3 Snyk-Config-Scaffolding/src/snyk-scaffold.py
     --group_name="<snyk-group-name>"
-    --org_name="<target-snyk-org-name>" 
     --group_svc_ac_token="<snyk-group-service-account-token-value>" 
-    --org_service_account_name="<name>" 
     --group_role_name="<name>"
+    --org_name="<target-snyk-org-name>" 
+    --org_service_account_name="<name>" 
     --api_ver="<snyk-rest-api-version>"
 
 python3 Snyk-Config-Scaffolding/src/snyk-scaffold.py
     --group_name="kevin.matthews Group"
-    --org_name="Kevin-Test2"
     --group_svc_ac_token="<snyk-group-service-account-token-value>"
-    --org_service_account_name="CICD"
     --group_role_name="CICD"
+    --org_name="Kevin-Test2"
+    --org_service_account_name="CICD"
+    --api_ver="2024-08-15"
+````
+
+# Snyk-Org-Id
+The utility can be called within CICD pipelines. It enables Snyk customers to retrieve the organisation id for a named 
+organisation. It parses the SNYK_TOKEN value from within the environment in order to authenticate when calling Snyk
+APIs.
+
+
+## How to call Snyk-Org-Id
+````
+python3 Snyk-Config-Scaffolding/src/snyk-org-id.py
+    --group_name="<snyk-group-name>"
+    --org_name="<target-snyk-org-name>" 
+    --api_ver="<snyk-rest-api-version>"
+
+python3 Snyk-Config-Scaffolding/src/snyk-org-id.py
+    --group_name="kevin.matthews Group"
+    --org_name="Kevin-Test2"
     --api_ver="2024-08-15"
 ````
 
