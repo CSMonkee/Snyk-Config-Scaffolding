@@ -1,7 +1,8 @@
 import json
 import os
-
 import requests
+
+from src.utils import util_func
 
 SNYK_REST_API_BASE_URL = "https://api.snyk.io/rest"
 
@@ -25,25 +26,33 @@ def build_headers(args):
 # Iterate over your groups and return the id for the required group name
 def get_group_id(args):
     url = f'{SNYK_REST_API_BASE_URL}/groups?version={args["api_ver"]}~beta'
-    response = requests.request("GET", url, headers=build_headers(args))
-    if response.status_code == 200:
-        groups = json.loads(response.text)['data']
-        for group in groups:
-            if group["attributes"]["name"] == args["group_name"]:
-                return group["id"]
-    return None
+    while True:
+        response = requests.request("GET", url, headers=build_headers(args))
+        if response.status_code == 200:
+            groups = json.loads(response.text)['data']
+            for group in groups:
+                if group["attributes"]["name"] == args["group_name"]:
+                    return group["id"]
+            pagination = util_func.next_page(json.loads(response.text))
+            if pagination is None:
+                return pagination
+            url = f'{SNYK_REST_API_BASE_URL}/groups?version={args["api_ver"]}~beta&starting_after={pagination}'
 
 
 # Check if the target organisation name already exists
 def check_organization_exists(args, group_id):
     url = f'{SNYK_REST_API_BASE_URL}/groups/{group_id}/orgs?version={args["api_ver"]}'
-    response = requests.request("GET", url, headers=build_headers(args))
-    if response.status_code == 200:
-        orgs = json.loads(response.text)['data']
-        for org in orgs:
-            if org['attributes']['name'] == args["org_name"]:
-                return org['id']
-    return None
+    while True:
+        response = requests.request("GET", url, headers=build_headers(args))
+        if response.status_code == 200:
+            orgs = json.loads(response.text)['data']
+            for org in orgs:
+                if org['attributes']['name'] == args["org_name"]:
+                    return org['id']
+            pagination = util_func.next_page(json.loads(response.text))
+            if pagination is None:
+                return pagination
+            url = f'{SNYK_REST_API_BASE_URL}/groups/{group_id}/orgs?version={args["api_ver"]}&starting_after={pagination}'
 
 
 # Create the service account within the target org and return the auth-key post creation only

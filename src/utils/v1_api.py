@@ -44,8 +44,8 @@ def create_organization(args, group_id):
 def get_group_role_id(args, group_id, role_name):
     url = f'{SNYK_V1_API_BASE_URL}/group/{group_id}/roles'
     response = requests.get(url, headers=build_headers(args))
-
-    for role in json.loads(response.text):
+    roles = json.loads(response.text)
+    for role in roles:
         if role["name"] == role_name:
             return role["publicId"]
     print(f"Unable to find role {role_name} : {response.status_code} - {response.text}")

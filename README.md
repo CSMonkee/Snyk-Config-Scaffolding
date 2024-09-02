@@ -1,4 +1,12 @@
-### THIS SOFTWARE IS WORK IN PROGRESS. DO NOT CONSIDER IT COMPLETE UNTIL THIS NOTICE IS REMOVED!
+
+![snyk-oss-category](https://github.com/snyk-labs/oss-images/blob/main/oss-example.jpg)
+
+<br/>
+<div align="center">
+This is a list of examples and scripts compiled by the Snyk Customer Experience teams for the purpose of solving specific use cases raised by customers.
+</div>
+<br/>
+
 
 # Snyk-Scaffold
 The utility can be called within CICD pipelines. It enables Snyk customers to scaffold the following configuration 
@@ -20,9 +28,9 @@ pipeline will be kept within a restricted environmental context.
 The script returns the service account token for the **newly** created organisation. This value may be propagated to 
 the environment as follows:
 
-    ```
+```
     export SNYK_TOKEN=token-value
-    ```
+```
 
 
 ## How to call Snyk-Scaffold
@@ -34,6 +42,7 @@ python3 Snyk-Config-Scaffolding/src/snyk-scaffold.py
     --org_name="<target-snyk-org-name>" 
     --org_service_account_name="<name>" 
     --api_ver="<snyk-rest-api-version>"
+    --template_org_id="<existing-org-id-to-be-copied-when-creating-new-org>"
 
 python3 Snyk-Config-Scaffolding/src/snyk-scaffold.py
     --group_name="kevin.matthews Group"
@@ -42,6 +51,10 @@ python3 Snyk-Config-Scaffolding/src/snyk-scaffold.py
     --org_name="Kevin-Test2"
     --org_service_account_name="CICD"
     --api_ver="2024-08-15"
+    --template_org_id="<your-template-org-id>"
+
+
+Note that the template_org_id is optional.
 ````
 
 # Snyk-Org-Id
@@ -66,5 +79,3 @@ python3 Snyk-Config-Scaffolding/src/snyk-org-id.py
 ### Note:
 At the time of writing, I am required to use a mix of GA and beta REST APIs. As the beta APIs become GA, so I will 
 update this software.
-
-I have yet to add pagination at this time.
