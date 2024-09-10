@@ -69,11 +69,13 @@ python3 Snyk-Config-Scaffolding/src/snyk-org-id.py
     --group_name="<snyk-group-name>"
     --org_name="<target-snyk-org-name>" 
     --api_ver="<snyk-rest-api-version>"
+    --return="SLUG|ID"
 
 python3 Snyk-Config-Scaffolding/src/snyk-org-id.py
     --group_name="kevin.matthews Group"
     --org_name="Kevin-Test2"
     --api_ver="2024-08-15"
+    --return="SLUG"
 ````
 
 ### Note:

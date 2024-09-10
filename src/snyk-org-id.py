@@ -12,6 +12,7 @@ def get_arguments():
     parser.add_argument('-g', '--group_name', required=True)
     parser.add_argument('-o', '--org_name', required=True)
     parser.add_argument('-v', '--api_ver', required=True)
+    parser.add_argument('-r', '--return', required=True, default="ID")
     args = vars(parser.parse_args())
     return args
 
