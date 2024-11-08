@@ -48,9 +48,13 @@ def check_organization_exists(args, group_id):
             orgs = json.loads(response.text)['data']
             for org in orgs:
                 if org['attributes']['name'] == args["org_name"]:
-                    if args["return"].upper() == "SLUG":
-                        return org['attributes']['slug']
-                    return org['id']
+                    try:
+                        if args["return"].upper() == "SLUG":
+                            return org['attributes']['slug']
+                    except:
+                        pass
+                    finally:
+                        return org['id']
             pagination = util_func.next_page(json.loads(response.text))
             if pagination is None:
                 return pagination
